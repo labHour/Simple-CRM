@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -55,12 +55,7 @@ class CI_DB_mssql_driver extends CI_DB {
 	 */
 	function db_connect()
 	{
-		if ($this->port != '')
-		{
-			$this->hostname .= ','.$this->port;
-		}
-
-		return @mssql_connect($this->hostname, $this->username, $this->password);
+		return db_pconnect();
 	}
 
 	// --------------------------------------------------------------------
@@ -78,7 +73,7 @@ class CI_DB_mssql_driver extends CI_DB {
 			$this->hostname .= ','.$this->port;
 		}
 
-		return @mssql_pconnect($this->hostname, $this->username, $this->password);
+		return mssql_pconnect($this->hostname, $this->username, $this->password);
 	}
 
 	// --------------------------------------------------------------------
@@ -109,7 +104,7 @@ class CI_DB_mssql_driver extends CI_DB {
 	{
 		// Note: The brackets are required in the event that the DB name
 		// contains reserved characters
-		return @mssql_select_db('['.$this->database.']', $this->conn_id);
+		return mssql_select_db('['.$this->database.']', $this->conn_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -140,7 +135,7 @@ class CI_DB_mssql_driver extends CI_DB {
 	function _execute($sql)
 	{
 		$sql = $this->_prep_query($sql);
-		return @mssql_query($sql, $this->conn_id);
+		return mssql_query($sql, $this->conn_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -287,7 +282,7 @@ class CI_DB_mssql_driver extends CI_DB {
 	 */
 	function affected_rows()
 	{
-		return @mssql_rows_affected($this->conn_id);
+		return mssql_rows_affected($this->conn_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -656,7 +651,7 @@ class CI_DB_mssql_driver extends CI_DB {
 	 */
 	function _close($conn_id)
 	{
-		@mssql_close($conn_id);
+		mssql_close($conn_id);
 	}
 
 }

@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -34,7 +34,7 @@ class CI_DB_mssql_result extends CI_DB_result {
 	 */
 	function num_rows()
 	{
-		return @mssql_num_rows($this->result_id);
+		return mssql_num_rows($this->result_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -47,7 +47,7 @@ class CI_DB_mssql_result extends CI_DB_result {
 	 */
 	function num_fields()
 	{
-		return @mssql_num_fields($this->result_id);
+		return mssql_num_fields($this->result_id);
 	}
 
 	// --------------------------------------------------------------------

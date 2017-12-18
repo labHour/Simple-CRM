@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
+
 /**
  * CodeIgniter
  *
@@ -89,13 +90,13 @@ class CI_Input {
 		$this->_enable_xss		= (config_item('global_xss_filtering') === TRUE);
 		$this->_enable_csrf		= (config_item('csrf_protection') === TRUE);
 
-		global $SEC;
+		$SEC =& load_class('Security', 'core');
 		$this->security =& $SEC;
 
 		// Do we need the UTF-8 class?
 		if (UTF8_ENABLED === TRUE)
 		{
-			global $UNI;
+			$UNI =& load_class('Utf8', 'core');
 			$this->uni =& $UNI;
 		}
 
@@ -450,8 +451,7 @@ class CI_Input {
 			if ( ! is_array($global))
 			{
 				if ( ! in_array($global, $protected))
-				{
-					global $$global;
+				{				
 					$$global = NULL;
 				}
 			}
@@ -460,8 +460,7 @@ class CI_Input {
 				foreach ($global as $key => $val)
 				{
 					if ( ! in_array($key, $protected))
-					{
-						global $$key;
+					{	
 						$$key = NULL;
 					}
 				}
@@ -602,7 +601,7 @@ class CI_Input {
 	{
 		if ( ! preg_match("/^[a-z0-9:_\/-]+$/i", $str))
 		{
-			exit('Disallowed Key Characters.');
+			trigger_error('Disallowed Key Characters.');
 		}
 
 		// Clean UTF-8 if supported
@@ -635,7 +634,7 @@ class CI_Input {
 		}
 		else
 		{
-			$headers['Content-Type'] = (isset($_SERVER['CONTENT_TYPE'])) ? $_SERVER['CONTENT_TYPE'] : @getenv('CONTENT_TYPE');
+			$headers['Content-Type'] = (isset($_SERVER['CONTENT_TYPE'])) ? $_SERVER['CONTENT_TYPE'] : getenv('CONTENT_TYPE');
 
 			foreach ($_SERVER as $key => $val)
 			{

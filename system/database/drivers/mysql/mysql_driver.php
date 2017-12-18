@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH'))  trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -65,12 +65,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 */
 	function db_connect()
 	{
-		if ($this->port != '')
-		{
-			$this->hostname .= ':'.$this->port;
-		}
-
-		return @mysql_connect($this->hostname, $this->username, $this->password, TRUE);
+		return db_pconnect();
 	}
 
 	// --------------------------------------------------------------------
@@ -88,7 +83,7 @@ class CI_DB_mysql_driver extends CI_DB {
 			$this->hostname .= ':'.$this->port;
 		}
 
-		return @mysql_pconnect($this->hostname, $this->username, $this->password);
+		return mysql_pconnect($this->hostname, $this->username, $this->password);
 	}
 
 	// --------------------------------------------------------------------
@@ -120,7 +115,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 */
 	function db_select()
 	{
-		return @mysql_select_db($this->database, $this->conn_id);
+		return mysql_select_db($this->database, $this->conn_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -143,11 +138,11 @@ class CI_DB_mysql_driver extends CI_DB {
 
 		if ($this->use_set_names === TRUE)
 		{
-			return @mysql_query("SET NAMES '".$this->escape_str($charset)."' COLLATE '".$this->escape_str($collation)."'", $this->conn_id);
+			return mysql_query("SET NAMES '".$this->escape_str($charset)."' COLLATE '".$this->escape_str($collation)."'", $this->conn_id);
 		}
 		else
 		{
-			return @mysql_set_charset($charset, $this->conn_id);
+			return mysql_set_charset($charset, $this->conn_id);
 		}
 	}
 
@@ -176,7 +171,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	function _execute($sql)
 	{
 		$sql = $this->_prep_query($sql);
-		return @mysql_query($sql, $this->conn_id);
+		return mysql_query($sql, $this->conn_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -342,7 +337,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 */
 	function affected_rows()
 	{
-		return @mysql_affected_rows($this->conn_id);
+		return mysql_affected_rows($this->conn_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -355,7 +350,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 */
 	function insert_id()
 	{
-		return @mysql_insert_id($this->conn_id);
+		return mysql_insert_id($this->conn_id);
 	}
 
 	// --------------------------------------------------------------------
@@ -769,7 +764,7 @@ class CI_DB_mysql_driver extends CI_DB {
 	 */
 	function _close($conn_id)
 	{
-		@mysql_close($conn_id);
+		mysql_close($conn_id);
 	}
 
 }

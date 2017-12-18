@@ -1,6 +1,14 @@
 <div class="span10">
 	<div class="content">
-		<legend>Список клиентов <?php echo anchor('clients/add', '<i class="icon-user"></i> Добавить нового', 'class="btn btn-small"'); ?></legend>
+		<legend>Список клиентов <?php
+		$str = <<<HTML
+		<i class="icon-user"></i> Добавить нового
+HTML;
+		if (isset($str)) {
+			echo anchor('clients/add', $str, 'class="btn btn-small"');
+		}
+			
+		?></legend>
 		<table class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
@@ -17,8 +25,22 @@
 		<?php foreach ($clients as $client): ?>
 			<tr>
 				<td>
-                    <?php echo anchor('clients/edit/' . $client['id'],'<i class="icon-pencil"></i>', array('title'=>'редактировать')); ?>
-                    <?php echo anchor('orders/filter/' . $client['id'],'<i class="icon-book"></i>', array('title'=>'список заказов')); ?>
+                    <?php
+                    	$str = <<<HTML
+                    	<i class="icon-pencil"></i>
+HTML;
+                    	if (isset($str)) {
+                    		echo anchor('clients/edit/' . $client['id'], $str, array('title'=>'редактировать'));
+                    	}                   	
+                    ?>
+                    <?php
+                    	$str = <<<HTML
+                    	<i class="icon-book"></i>
+HTML;
+                    	if (isset($str)) {
+                    		echo anchor('orders/filter/' . $client['id'], $str, array('title'=>'список заказов'));
+                    	}                   	
+                    ?>
                 </td>
 				<?php foreach ($fields as $field_name => $field_display) : ?>
 				<td><?php echo $client[$field_name] ?></td>

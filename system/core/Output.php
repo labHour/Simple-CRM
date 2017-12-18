@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -91,7 +91,7 @@ class CI_Output {
 	 */
 	function __construct()
 	{
-		$this->_zlib_oc = @ini_get('zlib.output_compression');
+		$this->_zlib_oc = ini_get('zlib.output_compression');
 
 		// Get mime types for later
 		if (defined('ENVIRONMENT') AND file_exists(APPPATH.'config/'.ENVIRONMENT.'/mimes.php'))
@@ -326,7 +326,8 @@ class CI_Output {
 		// Note:  We use globals because we can't use $CI =& get_instance()
 		// since this function is sometimes called by the caching mechanism,
 		// which happens before the CI super object is available.
-		global $BM, $CFG;
+		$BM =& load_class('Benchmark', 'core');
+		$CFG =& load_class('Config', 'core');
 
 		// Grab the super object if we can.
 		if (class_exists('CI_Controller'))
@@ -388,7 +389,7 @@ class CI_Output {
 		{
 			foreach ($this->headers as $header)
 			{
-				@header($header[0], $header[1]);
+				header($header[0], $header[1]);
 			}
 		}
 
@@ -477,7 +478,7 @@ class CI_Output {
 
 		$cache_path .= md5($uri);
 
-		if ( ! $fp = @fopen($cache_path, FOPEN_WRITE_CREATE_DESTRUCTIVE))
+		if ( ! $fp = fopen($cache_path, FOPEN_WRITE_CREATE_DESTRUCTIVE))
 		{
 			log_message('error', "Unable to write cache file: ".$cache_path);
 			return;
@@ -496,7 +497,7 @@ class CI_Output {
 			return;
 		}
 		fclose($fp);
-		@chmod($cache_path, FILE_WRITE_MODE);
+		chmod($cache_path, FILE_WRITE_MODE);
 
 		log_message('debug', "Cache file written: ".$cache_path);
 	}
@@ -522,12 +523,12 @@ class CI_Output {
 
 		$filepath = $cache_path.md5($uri);
 
-		if ( ! @file_exists($filepath))
+		if ( ! file_exists($filepath))
 		{
 			return FALSE;
 		}
 
-		if ( ! $fp = @fopen($filepath, FOPEN_READ))
+		if ( ! $fp = fopen($filepath, FOPEN_READ))
 		{
 			return FALSE;
 		}
@@ -554,7 +555,7 @@ class CI_Output {
 		{
 			if (is_really_writable($cache_path))
 			{
-				@unlink($filepath);
+				unlink($filepath);
 				log_message('debug', "Cache file has expired. File deleted");
 				return FALSE;
 			}

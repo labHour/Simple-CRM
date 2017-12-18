@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -73,7 +73,7 @@
 
 	if ( ! is_php('5.3'))
 	{
-		@set_magic_quotes_runtime(0); // Kill magic quotes
+		set_magic_quotes_runtime(0); // Kill magic quotes
 	}
 
 /*
@@ -102,9 +102,9 @@
  *  Set a liberal script execution time limit
  * ------------------------------------------------------
  */
-	if (function_exists("set_time_limit") == TRUE AND @ini_get("safe_mode") == 0)
+	if (function_exists("set_time_limit") == TRUE AND ini_get("safe_mode") == 0)
 	{
-		@set_time_limit(300);
+		set_time_limit(300);
 	}
 
 /*
@@ -194,7 +194,7 @@
 	{
 		if ($OUT->_display_cache($CFG, $URI) == TRUE)
 		{
-			exit;
+			trigger_error('');
 		}
 	}
 

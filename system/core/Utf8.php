@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -38,8 +38,8 @@ class CI_Utf8 {
 	{
 		log_message('debug', "Utf8 Class Initialized");
 
-		global $CFG;
-
+		$CFG =& load_class('Config', 'core');
+		
 		if (
 			preg_match('/./u', 'é') === 1					// PCRE must support UTF-8
 			AND function_exists('iconv')					// iconv must be installed
@@ -86,7 +86,7 @@ class CI_Utf8 {
 	{
 		if ($this->_is_ascii($str) === FALSE)
 		{
-			$str = @iconv('UTF-8', 'UTF-8//IGNORE', $str);
+			$str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
 		}
 
 		return $str;
@@ -126,11 +126,11 @@ class CI_Utf8 {
 	{
 		if (function_exists('iconv'))
 		{
-			$str = @iconv($encoding, 'UTF-8', $str);
+			$str = iconv($encoding, 'UTF-8', $str);
 		}
 		elseif (function_exists('mb_convert_encoding'))
 		{
-			$str = @mb_convert_encoding($str, 'UTF-8', $encoding);
+			$str = mb_convert_encoding($str, 'UTF-8', $encoding);
 		}
 		else
 		{

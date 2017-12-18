@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 
 class Crud_model extends CI_Model {
 

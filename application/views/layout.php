@@ -33,20 +33,55 @@
             <ul class="nav nav-list">
               <li class="nav-header">Меню</li>
               <li <?php if ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == '') echo 'class="active"'; ?> >
-                  <?php echo anchor('dashboard', '<i class="icon-home"></i> Консоль'); ?>
+                  <?php
+                  $str = <<<HTML
+                  <i class="icon-home"></i> Консоль
+HTML;
+                  if (isset($str)) {
+                    echo anchor('dashboard', $str);
+                  }
+                  ?>
               </li>
               <li <?php if ($this->uri->segment(1) == 'clients') echo 'class="active"'; ?> >
-                  <?php echo anchor('clients/display', '<i class="icon-user"></i> Клиенты'); ?>
+                  <?php
+                  $str = <<<HTML
+                  <i class="icon-user"></i> Клиенты
+HTML;
+                  if (isset($str)) {
+                    echo anchor('clients/display', $str);
+                  }
+                  ?>
               </li>              
               <li <?php if ($this->uri->segment(1) == 'orders') echo 'class="active"'; ?> >
-                  <?php echo anchor('orders/display', '<i class="icon-book"></i> Заказы'); ?>
+                  <?php
+                  $str = <<<HTML
+                  <i class="icon-book"></i> Заказы
+HTML;
+                  if (isset($str)) {
+                    echo anchor('orders/display', $str);
+                  }
+                  ?>
               </li>
               <li class="nav-header"><hr /></li>
               <li <?php if ($this->uri->segment(2) == 'settings') echo 'class="active"'; ?> >
-                  <?php echo anchor('page/settings', '<i class="icon-cog"></i> Настройки'); ?>
+                  <?php
+                  $str = <<<HTML
+                  <i class="icon-cog"></i> Настройки
+HTML;
+                  if (isset($str)) {
+                    echo anchor('page/settings', $str);
+                  }
+                  ?>
               </li>
               <li <?php if ($this->uri->segment(2) == 'logout') echo 'class="active"'; ?> >
-                  <?php echo anchor('page/help', '<i class="icon-question-sign"></i> Справка'); ?>
+                  <?php
+                  $str = <<<HTML
+                  <i class="icon-question-sign"></i> Справка
+HTML;
+                  if (isset($str)) {
+                    echo anchor('page/help', $str);
+                  }
+                  ?>
               </li>
             </ul>
           </div><!--/.well -->

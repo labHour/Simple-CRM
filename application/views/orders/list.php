@@ -1,6 +1,13 @@
 <div class="span10">
     <div class="content">
-        <legend>Список заказов <?php echo anchor('orders/add', '<i class="icon-book"></i> Добавить новый', 'class="btn btn-small"'); ?></legend>
+        <legend>Список заказов <?php
+        $str = <<<HTML
+        <i class="icon-book"></i> Добавить новый
+HTML;
+        if (isset($str)) {
+            echo anchor('orders/add', $str, 'class="btn btn-small"');
+        }      
+        ?></legend>
         <table class="table table-striped table-bordered table-condensed">
             <thead>
             <tr>
@@ -21,7 +28,14 @@
             <tbody>
             <?php foreach ($orders as $order): ?>
             <tr>
-                <td><?php echo anchor('orders/edit/' . $order['id'],'<i class="icon-pencil"></i>'); ?></td>
+                <td><?php
+                $str = <<<HTML
+                <i class="icon-pencil"></i>
+HTML;
+                if (isset($str)) {
+                     echo anchor('orders/edit/' . $order['id'], $str);
+                }
+                ?></td>
                 <?php foreach ($fields as $field_name => $field_display) : ?>
                 <td><?php echo $order[$field_name] ?></td>
                 <?php endforeach; ?>

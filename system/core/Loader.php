@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -824,7 +824,7 @@ class CI_Loader {
 		// do a little string replacement, changing the short tags
 		// to standard PHP echo statements.
 
-		if ((bool) @ini_get('short_open_tag') === FALSE AND config_item('rewrite_short_tags') == TRUE)
+		if ((bool) ini_get('short_open_tag') === FALSE AND config_item('rewrite_short_tags') == TRUE)
 		{
 			echo eval('?>'.preg_replace("/;*\s*\?>/", "; ?>", str_replace('<?=', '<?php echo ', file_get_contents($_ci_path))));
 		}
@@ -839,7 +839,7 @@ class CI_Loader {
 		if ($_ci_return === TRUE)
 		{
 			$buffer = ob_get_contents();
-			@ob_end_clean();
+			ob_end_clean();
 			return $buffer;
 		}
 
@@ -860,7 +860,7 @@ class CI_Loader {
 		else
 		{
 			$_ci_CI->output->append_output(ob_get_contents());
-			@ob_end_clean();
+			ob_end_clean();
 		}
 	}
 

@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -72,7 +72,7 @@ if ( ! function_exists('is_really_writable'))
 	function is_really_writable($file)
 	{
 		// If we're on a Unix server with safe_mode off we call is_writable
-		if (DIRECTORY_SEPARATOR == '/' AND @ini_get("safe_mode") == FALSE)
+		if (DIRECTORY_SEPARATOR == '/' AND ini_get("safe_mode") == FALSE)
 		{
 			return is_writable($file);
 		}
@@ -83,17 +83,17 @@ if ( ! function_exists('is_really_writable'))
 		{
 			$file = rtrim($file, '/').'/'.md5(mt_rand(1,100).mt_rand(1,100));
 
-			if (($fp = @fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
+			if (($fp = fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
 			{
 				return FALSE;
 			}
 
 			fclose($fp);
-			@chmod($file, DIR_WRITE_MODE);
-			@unlink($file);
+			chmod($file, DIR_WRITE_MODE);
+			unlink($file);
 			return TRUE;
 		}
-		elseif ( ! is_file($file) OR ($fp = @fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
+		elseif ( ! is_file($file) OR ($fp = fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
 		{
 			return FALSE;
 		}
@@ -163,9 +163,7 @@ if ( ! function_exists('load_class'))
 		// Did we find the class?
 		if ($name === FALSE)
 		{
-			// Note: We use exit() rather then show_error() in order to avoid a
-			// self-referencing loop with the Excptions class
-			exit('Unable to locate the specified class: '.$class.'.php');
+			trigger_error('Unable to locate the specified class: '.$class.'.php');
 		}
 
 		// Keep track of what we just loaded
@@ -231,7 +229,7 @@ if ( ! function_exists('get_config'))
 		// Fetch the config file
 		if ( ! file_exists($file_path))
 		{
-			exit('The configuration file does not exist.');
+			trigger_error('The configuration file does not exist.');
 		}
 
 		require($file_path);
@@ -239,7 +237,7 @@ if ( ! function_exists('get_config'))
 		// Does the $config array exist in the file?
 		if ( ! isset($config) OR ! is_array($config))
 		{
-			exit('Your config file does not appear to be formatted correctly.');
+			trigger_error('Your config file does not appear to be formatted correctly.');
 		}
 
 		// Are any values being dynamically replaced?
@@ -307,7 +305,7 @@ if ( ! function_exists('show_error'))
 	{
 		$_error =& load_class('Exceptions', 'core');
 		echo $_error->show_error($heading, $message, 'error_general', $status_code);
-		exit;
+		trigger_error('');
 	}
 }
 
@@ -329,7 +327,7 @@ if ( ! function_exists('show_404'))
 	{
 		$_error =& load_class('Exceptions', 'core');
 		$_error->show_404($page, $log_error);
-		exit;
+		trigger_error('');
 	}
 }
 
@@ -346,7 +344,7 @@ if ( ! function_exists('show_404'))
 */
 if ( ! function_exists('log_message'))
 {
-	function log_message($level = 'error', $message, $php_error = FALSE)
+	function log_message($message, $php_error = FALSE, $level = 'error')
 	{
 		static $_log;
 

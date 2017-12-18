@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) trigger_error('No direct script access allowed');
 /**
  * CodeIgniter
  *
@@ -67,7 +67,7 @@ function &DB($params = '', $active_record_override = NULL)
 		 *  $dsn = 'driver://username:password@hostname/database';
 		 */
 
-		if (($dns = @parse_url($params)) === FALSE)
+		if (($dns = parse_url($params)) === FALSE)
 		{
 			show_error('Invalid DB Connection String');
 		}
