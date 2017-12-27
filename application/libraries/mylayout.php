@@ -23,6 +23,11 @@ class Mylayout {
     {
         $this->CI =& get_instance();
     }
+	
+	public function getCI()
+	{
+		return $this->CI;
+	}
 
     // пути к файлам вида
     public $header = 'header';

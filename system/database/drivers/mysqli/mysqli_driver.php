@@ -52,7 +52,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * of affected rows to be shown. Uses a preg_replace when enabled,
 	 * adding a bit more processing to all queries.
 	 */
-	var $delete_hack = TRUE;
+	var $delete_hack = true;
 
 	// whether SET NAMES must be used to set the character set
 	var $use_set_names;
@@ -104,9 +104,9 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 */
 	function reconnect()
 	{
-		if (mysqli_ping($this->conn_id) === FALSE)
+		if (mysqli_ping($this->conn_id) === false)
 		{
-			$this->conn_id = FALSE;
+			$this->conn_id = false;
 		}
 	}
 
@@ -138,10 +138,10 @@ class CI_DB_mysqli_driver extends CI_DB {
 		if ( ! isset($this->use_set_names))
 		{
 			// mysqli_set_charset() requires MySQL >= 5.0.7, use SET NAMES as fallback
-			$this->use_set_names = (version_compare(mysqli_get_server_info($this->conn_id), '5.0.7', '>=')) ? FALSE : TRUE;
+			$this->use_set_names = (version_compare(mysqli_get_server_info($this->conn_id), '5.0.7', '>=')) ? false : true;
 		}
 
-		if ($this->use_set_names === TRUE)
+		if ($this->use_set_names === true)
 		{
 			return mysqli_query($this->conn_id, "SET NAMES '".$this->escape_str($charset)."' COLLATE '".$this->escape_str($collation)."'");
 		}
@@ -195,7 +195,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	{
 		// "DELETE FROM TABLE" returns 0 affected rows This hack modifies
 		// the query so that it returns the number of affected rows
-		if ($this->delete_hack === TRUE)
+		if ($this->delete_hack === true)
 		{
 			if (preg_match('/^\s*DELETE\s+FROM\s+(\S+)\s*$/i', $sql))
 			{
@@ -214,27 +214,27 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * @access	public
 	 * @return	bool
 	 */
-	function trans_begin($test_mode = FALSE)
+	function trans_begin($test_mode = false)
 	{
 		if ( ! $this->trans_enabled)
 		{
-			return TRUE;
+			return true;
 		}
 
 		// When transactions are nested we only begin/commit/rollback the outermost ones
 		if ($this->_trans_depth > 0)
 		{
-			return TRUE;
+			return true;
 		}
 
 		// Reset the transaction failure flag.
-		// If the $test_mode flag is set to TRUE transactions will be rolled back
+		// If the $test_mode flag is set to true transactions will be rolled back
 		// even if the queries produce a successful result.
-		$this->_trans_failure = ($test_mode === TRUE) ? TRUE : FALSE;
+		$this->_trans_failure = ($test_mode === true) ? true : false;
 
 		$this->simple_query('SET AUTOCOMMIT=0');
 		$this->simple_query('START TRANSACTION'); // can also be BEGIN or BEGIN WORK
-		return TRUE;
+		return true;
 	}
 
 	// --------------------------------------------------------------------
@@ -249,18 +249,18 @@ class CI_DB_mysqli_driver extends CI_DB {
 	{
 		if ( ! $this->trans_enabled)
 		{
-			return TRUE;
+			return true;
 		}
 
 		// When transactions are nested we only begin/commit/rollback the outermost ones
 		if ($this->_trans_depth > 0)
 		{
-			return TRUE;
+			return true;
 		}
 
 		$this->simple_query('COMMIT');
 		$this->simple_query('SET AUTOCOMMIT=1');
-		return TRUE;
+		return true;
 	}
 
 	// --------------------------------------------------------------------
@@ -275,18 +275,18 @@ class CI_DB_mysqli_driver extends CI_DB {
 	{
 		if ( ! $this->trans_enabled)
 		{
-			return TRUE;
+			return true;
 		}
 
 		// When transactions are nested we only begin/commit/rollback the outermost ones
 		if ($this->_trans_depth > 0)
 		{
-			return TRUE;
+			return true;
 		}
 
 		$this->simple_query('ROLLBACK');
 		$this->simple_query('SET AUTOCOMMIT=1');
-		return TRUE;
+		return true;
 	}
 
 	// --------------------------------------------------------------------
@@ -299,7 +299,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * @param	bool	whether or not the string will be used in a LIKE condition
 	 * @return	string
 	 */
-	function escape_str($str, $like = FALSE)
+	function escape_str($str, $like = false)
 	{
 		if (is_array($str))
 		{
@@ -311,7 +311,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 			return $str;
 		}
 
-		if (function_exists('mysqli_real_escape_string') AND is_object($this->conn_id))
+		if (function_exists('mysqli_real_escape_string') and is_object($this->conn_id))
 		{
 			$str = mysqli_real_escape_string($this->conn_id, $str);
 		}
@@ -325,7 +325,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 		}
 
 		// escape LIKE condition wildcards
-		if ($like === TRUE)
+		if ($like === true)
 		{
 			$str = str_replace(array('%', '_'), array('\\%', '\\_'), $str);
 		}
@@ -378,7 +378,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 			return 0;
 		}
 
-		$query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
+		$query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, true, null, false));
 
 		if ($query->num_rows() == 0)
 		{
@@ -401,11 +401,11 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * @param	boolean
 	 * @return	string
 	 */
-	function _list_tables($prefix_limit = FALSE)
+	function _list_tables($prefix_limit = false)
 	{
 		$sql = "SHOW TABLES FROM ".$this->_escape_char.$this->database.$this->_escape_char;
 
-		if ($prefix_limit !== FALSE AND $this->dbprefix != '')
+		if ($prefix_limit !== false and $this->dbprefix != '')
 		{
 			$sql .= " LIKE '".$this->escape_like_str($this->dbprefix)."%'";
 		}
@@ -426,7 +426,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 */
 	function _list_columns($table = '')
 	{
-		return "SHOW COLUMNS FROM ".$this->_protect_identifiers($table, TRUE, NULL, FALSE);
+		return "SHOW COLUMNS FROM ".$this->_protect_identifiers($table, true, null, false);
 	}
 
 	// --------------------------------------------------------------------
@@ -491,7 +491,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 
 		foreach ($this->_reserved_identifiers as $id)
 		{
-			if (strpos($item, '.'.$id) !== FALSE)
+			if (strpos($item, '.'.$id) !== false)
 			{
 				$str = $this->_escape_char. str_replace('.', $this->_escape_char.'.', $item);
 
@@ -500,7 +500,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 			}
 		}
 
-		if (strpos($item, '.') !== FALSE)
+		if (strpos($item, '.') !== false)
 		{
 			$str = $this->_escape_char.str_replace('.', $this->_escape_char.'.'.$this->_escape_char, $item).$this->_escape_char;
 		}
@@ -605,7 +605,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * @param	array	the limit clause
 	 * @return	string
 	 */
-	function _update($table, $values, $where, $orderby = array(), $limit = FALSE)
+	function _update($table, $values, $where, $orderby = array(), $limit = false)
 	{
 		foreach ($values as $key => $val)
 		{
@@ -618,7 +618,7 @@ class CI_DB_mysqli_driver extends CI_DB {
 
 		$sql = "UPDATE ".$table." SET ".implode(', ', $valstr);
 
-		$sql .= ($where != '' AND count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
+		$sql .= ($where != '' and count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
 
 		$sql .= $orderby.$limit;
 
@@ -638,10 +638,10 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * @param	array	the where clause
 	 * @return	string
 	 */
-	function _update_batch($table, $values, $index, $where = NULL)
+	function _update_batch($table, $values, $index, $where = null)
 	{
 		$ids = array();
-		$where = ($where != '' AND count($where) >=1) ? implode(" ", $where).' AND ' : '';
+		$where = ($where != '' and count($where) >=1) ? implode(" ", $where).' AND ' : '';
 
 		foreach ($values as $key => $val)
 		{
@@ -708,11 +708,11 @@ class CI_DB_mysqli_driver extends CI_DB {
 	 * @param	string	the limit clause
 	 * @return	string
 	 */
-	function _delete($table, $where = array(), $like = array(), $limit = FALSE)
+	function _delete($table, $where = array(), $like = array(), $limit = false)
 	{
 		$conditions = '';
 
-		if (count($where) > 0 OR count($like) > 0)
+		if (count($where) > 0 or count($like) > 0)
 		{
 			$conditions = "\nWHERE ";
 			$conditions .= implode("\n", $this->ar_where);

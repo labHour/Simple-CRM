@@ -88,8 +88,8 @@ class CI_DB_mysqli_result extends CI_DB_result {
 		{
 			preg_match('/([a-zA-Z]+)(\(\d+\))?/', $field->Type, $matches);
 
-			$type = (array_key_exists(1, $matches)) ? $matches[1] : NULL;
-			$length = (array_key_exists(2, $matches)) ? preg_replace('/[^\d]/', '', $matches[2]) : NULL;
+			$type = (array_key_exists(1, $matches)) ? $matches[1] : null;
+			$length = (array_key_exists(2, $matches)) ? preg_replace('/[^\d]/', '', $matches[2]) : null;
 
 			$F				= new stdClass();
 			$F->name		= $field->Field;
@@ -116,7 +116,7 @@ class CI_DB_mysqli_result extends CI_DB_result {
 		if (is_object($this->result_id))
 		{
 			mysqli_free_result($this->result_id);
-			$this->result_id = FALSE;
+			$this->result_id = false;
 		}
 	}
 

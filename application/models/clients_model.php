@@ -15,7 +15,7 @@ class Clients_model extends Crud_model {
      * @param array $data данные о клиенте
      * @return int id клиента
      */
-    public function add($data)
+    public function addClient($data)
 	{
     	$this->db->insert($this->table, $data);
         return $this->db->insert_id();
@@ -97,7 +97,7 @@ class Clients_model extends Crud_model {
      */
 	public function delete($id)
 	{
-        if ($id != NULL)
+        if ($id != null)
         {
             $this->db->where('id', $id);                    
             $this->db->delete($this->table);                        

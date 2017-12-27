@@ -33,9 +33,12 @@ class CI_DB_cubrid_forge extends CI_DB_forge {
 	 */
 	function _create_database($name)
 	{
+		//Let's use the unused parameers.
+		if(isset($name)===false)
+			return false;
 		// CUBRID does not allow to create a database in SQL. The GUI tools
 		// have to be used for this purpose.
-		return FALSE;
+		return false;
 	}
 
 	// --------------------------------------------------------------------
@@ -49,9 +52,12 @@ class CI_DB_cubrid_forge extends CI_DB_forge {
 	 */
 	function _drop_database($name)
 	{
+		//Let's use the unused parameters.
+		if(isset($name)===false)
+			return false;
 		// CUBRID does not allow to drop a database in SQL. The GUI tools
 		// have to be used for this purpose.
-		return FALSE;
+		return false;
 	}
 
 	// --------------------------------------------------------------------
@@ -113,7 +119,7 @@ class CI_DB_cubrid_forge extends CI_DB_forge {
 					}
 				}
 
-				if (array_key_exists('UNSIGNED', $attributes) && $attributes['UNSIGNED'] === TRUE)
+				if (array_key_exists('UNSIGNED', $attributes) && $attributes['UNSIGNED'] === true)
 				{
 					//$sql .= ' UNSIGNED';
 					// As of version 8.4.0 CUBRID does not support UNSIGNED INTEGER data type.
@@ -125,7 +131,7 @@ class CI_DB_cubrid_forge extends CI_DB_forge {
 					$sql .= ' DEFAULT \''.$attributes['DEFAULT'].'\'';
 				}
 
-				if (array_key_exists('NULL', $attributes) && $attributes['NULL'] === TRUE)
+				if (array_key_exists('NULL', $attributes) && $attributes['NULL'] === true)
 				{
 					$sql .= ' NULL';
 				}
@@ -134,12 +140,12 @@ class CI_DB_cubrid_forge extends CI_DB_forge {
 					$sql .= ' NOT NULL';
 				}
 
-				if (array_key_exists('AUTO_INCREMENT', $attributes) && $attributes['AUTO_INCREMENT'] === TRUE)
+				if (array_key_exists('AUTO_INCREMENT', $attributes) && $attributes['AUTO_INCREMENT'] === true)
 				{
 					$sql .= ' AUTO_INCREMENT';
 				}
 
-				if (array_key_exists('UNIQUE', $attributes) && $attributes['UNIQUE'] === TRUE)
+				if (array_key_exists('UNIQUE', $attributes) && $attributes['UNIQUE'] === true)
 				{
 					$sql .= ' UNIQUE';
 				}
@@ -172,7 +178,7 @@ class CI_DB_cubrid_forge extends CI_DB_forge {
 	{
 		$sql = 'CREATE TABLE ';
 
-		if ($if_not_exists === TRUE)
+		if ($if_not_exists === true)
 		{
 			//$sql .= 'IF NOT EXISTS ';
 			// As of version 8.4.0 CUBRID does not support this SQL syntax.

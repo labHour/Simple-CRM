@@ -103,7 +103,7 @@ class CI_Security {
 		// CSRF config
 		foreach(array('csrf_expire', 'csrf_token_name', 'csrf_cookie_name') as $key)
 		{
-			if (FALSE !== ($val = config_item($key)))
+			if (false !== ($val = config_item($key)))
 			{
 				$this->{'_'.$key} = $val;
 			}
@@ -116,9 +116,16 @@ class CI_Security {
 		}
 
 		// Set the CSRF hash
-		$this->_csrf_set_hash();
-
+		$flag = $this->_csrf_set_hash();
+		
+		if ( $flag === false )
+		{
+			trigger_error('CRSF couldnt set hash');
+		}
+		else
+		{
 		log_message('debug', "Security Class Initialized");
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -137,7 +144,7 @@ class CI_Security {
 		}
 
 		// Do the tokens exist in both the _POST and _COOKIE arrays?
-		if ( ! isset($_POST[$this->_csrf_token_name]) OR
+		if ( ! isset($_POST[$this->_csrf_token_name]) or
 			 ! isset($_COOKIE[$this->_csrf_cookie_name]))
 		{
 			$this->csrf_show_error();
@@ -155,12 +162,23 @@ class CI_Security {
 
 		// Nothing should last forever
 		unset($_COOKIE[$this->_csrf_cookie_name]);
-		$this->_csrf_set_hash();
-		$this->csrf_set_cookie();
+		
+		$flag = $this->_csrf_set_hash();
+		$flagc = $this->csrf_set_cookie();
+		
+		if ( $flag === false || $flagc )
+		{
+			trigger_error('CRSF couldnt set hash or cookies');
+		}
+		else
+		{
+		
+		
 
 		log_message('debug', "CSRF token verified ");
 
 		return $this;
+		}
 	}
 
 	// --------------------------------------------------------------------
@@ -173,15 +191,15 @@ class CI_Security {
 	public function csrf_set_cookie()
 	{
 		$expire = time() + $this->_csrf_expire;
-		$secure_cookie = (config_item('cookie_secure') === TRUE) ? 1 : 0;
+		$secure_cookie = (config_item('cookie_secure') === true) ? 1 : 0;
 
 		if ($secure_cookie)
 		{
-			$req = isset($_SERVER['HTTPS']) ? $_SERVER['HTTPS'] : FALSE;
+			$req = isset($_SERVER['HTTPS']) ? $_SERVER['HTTPS'] : false;
 
-			if ( ! $req OR $req == 'off')
+			if ( ! $req or $req == 'off')
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
@@ -241,7 +259,7 @@ class CI_Security {
 	 * prevented.  This function does a fair amount of work but
 	 * it is extremely thorough, designed to prevent even the
 	 * most obscure XSS attempts.  Nothing is ever 100% foolproof,
-	 * of course, but I haven't been able to get anything passed
+	 * of course, but I haven't been able to get anything ed
 	 * the filter.
 	 *
 	 * Note: This function should only be used to deal with data
@@ -260,7 +278,7 @@ class CI_Security {
 	 * @param 	bool
 	 * @return	string
 	 */
-	public function xss_clean($str, $is_image = FALSE)
+	public function xss_clean($str, $is_image = false)
 	{
 		/*
 		 * Is the string an array?
@@ -323,7 +341,7 @@ class CI_Security {
 		 * large blocks of data, so we use str_replace.
 		 */
 
-		if (strpos($str, "\t") !== FALSE)
+		if (strpos($str, "\t") !== false)
 		{
 			$str = str_replace("\t", ' ', $str);
 		}
@@ -345,7 +363,7 @@ class CI_Security {
 		 *
 		 * But it doesn't seem to pose a problem.
 		 */
-		if ($is_image === TRUE)
+		if ($is_image === true)
 		{
 			// Images have a tendency to have the PHP short opening and
 			// closing tags every so often so we skip those and only
@@ -402,7 +420,7 @@ class CI_Security {
 				$str = preg_replace_callback("#<img\s+([^>]*?)(\s?/?>|$)#si", array($this, '_js_img_removal'), $str);
 			}
 
-			if (preg_match("/script/i", $str) OR preg_match("/xss/i", $str))
+			if (preg_match("/script/i", $str) or preg_match("/xss/i", $str))
 			{
 				$str = preg_replace("#<(/*)(script|xss)(.*?)\>#si", '[removed]', $str);
 			}
@@ -450,15 +468,15 @@ class CI_Security {
 		 * Images are Handled in a Special Way
 		 * - Essentially, we want to know that after all of the character
 		 * conversion is done whether any unwanted, likely XSS, code was found.
-		 * If not, we return TRUE, as the image is clean.
+		 * If not, we return true, as the image is clean.
 		 * However, if the string post-conversion does not matched the
 		 * string post-removal of XSS, then it fails, as there was unwanted XSS
 		 * code found and removed/changed during processing.
 		 */
 
-		if ($is_image === TRUE)
+		if ($is_image === true)
 		{
-			return ($str == $converted_string) ? TRUE: FALSE;
+			return ($str == $converted_string) ? true: false;
 		}
 
 		log_message('debug', "XSS Filtering completed");
@@ -477,7 +495,12 @@ class CI_Security {
 		if ($this->_xss_hash == '')
 		{
 			mt_srand();
-			$this->_xss_hash = md5(time() + mt_rand(0, 1999999999));
+			
+			$options = [
+   			 'cost' => 13,
+			];	
+			
+			$this->_xss_hash = password_hash(time() + mt_rand(0, 1999999999), PASSWORD_BCRYPT, $options);
 		}
 
 		return $this->_xss_hash;
@@ -502,7 +525,7 @@ class CI_Security {
 	 */
 	public function entity_decode($str, $charset='UTF-8')
 	{
-		if (stristr($str, '&') === FALSE)
+		if (stristr($str, '&') === false)
 		{
 			return $str;
 		}
@@ -521,7 +544,7 @@ class CI_Security {
 	 * @param 	bool
 	 * @return	string
 	 */
-	public function sanitize_filename($str, $relative_path = FALSE)
+	public function sanitize_filename($str, $relative_path = false)
 	{
 		$bad = array(
 						"../",
@@ -563,7 +586,7 @@ class CI_Security {
 			$bad[] = '/';
 		}
 
-		$str = remove_invisible_characters($str, FALSE);
+		$str = remove_invisible_characters($str, false);
 		return stripslashes(str_replace($bad, '', $str));
 	}
 
@@ -597,7 +620,7 @@ class CI_Security {
 	 *		<a |style="document.write('hello'); alert('world');"| class="link">
 	 *
 	 * @param string $str The string to check
-	 * @param boolean $is_image TRUE if this is an image
+	 * @param boolean $is_image true if this is an image
 	 * @return string The string with the evil attributes removed
 	 */
 	protected function _remove_evil_attributes($str, $is_image)
@@ -605,7 +628,7 @@ class CI_Security {
 		// All javascript event handlers (e.g. onload, onclick, onmouseover), style, and xmlns
 		$evil_attributes = array('on\w*', 'style', 'xmlns', 'formaction');
 
-		if ($is_image === TRUE)
+		if ($is_image === true)
 		{
 			/*
 			 * Adobe Photoshop puts XML metadata into JFIF images, 
@@ -853,7 +876,11 @@ class CI_Security {
 				return $this->_csrf_hash = $_COOKIE[$this->_csrf_cookie_name];
 			}
 
-			return $this->_csrf_hash = md5(uniqid(rand(), TRUE));
+			$options = [
+   			 'cost' => 13,
+			];	
+
+			return $this->_csrf_hash = password_hash(uniqid(rand(), true), PASSWORD_BCRYPT, $options);
 		}
 
 		return $this->_csrf_hash;

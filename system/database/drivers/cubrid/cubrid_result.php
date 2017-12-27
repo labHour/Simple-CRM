@@ -79,7 +79,8 @@ class CI_DB_cubrid_result extends CI_DB_result {
 	{
 		$retval = array();
 
-		$tablePrimaryKeys = array();
+		// Unused variable. Commented 'cause it could be useful in the future. See -> TODO (line 98)
+		// $tablePrimaryKeys = array();
 
 		while ($field = cubrid_fetch_field($this->result_id))
 		{
@@ -121,7 +122,7 @@ class CI_DB_cubrid_result extends CI_DB_result {
 			if (is_resource($res))
 			{
 				cubrid_close_request($res);
-				$this->result_id = FALSE;
+				$this->result_id = false;
 			}
 
 			$retval[] = $F;
@@ -144,7 +145,7 @@ class CI_DB_cubrid_result extends CI_DB_result {
 			preg_match('/Resource id #/', strval($this->result_id)))
 		{
 			cubrid_close_request($this->result_id);
-			$this->result_id = FALSE;
+			$this->result_id = false;
 		}
 	}
 

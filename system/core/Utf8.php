@@ -42,32 +42,32 @@ class CI_Utf8 {
 		
 		if (
 			preg_match('/./u', 'é') === 1					// PCRE must support UTF-8
-			AND function_exists('iconv')					// iconv must be installed
-			AND ini_get('mbstring.func_overload') != 1		// Multibyte string function overloading cannot be enabled
-			AND $CFG->item('charset') == 'UTF-8'			// Application charset must be UTF-8
+			and function_exists('iconv')					// iconv must be installed
+			and ini_get('mbstring.func_overload') != 1		// Multibyte string function overloading cannot be enabled
+			and $CFG->item('charset') == 'UTF-8'			// Application charset must be UTF-8
 			)
 		{
 			log_message('debug', "UTF-8 Support Enabled");
 
-			define('UTF8_ENABLED', TRUE);
+			define('UTF8_ENABLED', true);
 
 			// set internal encoding for multibyte string functions if necessary
 			// and set a flag so we don't have to repeatedly use extension_loaded()
 			// or function_exists()
 			if (extension_loaded('mbstring'))
 			{
-				define('MB_ENABLED', TRUE);
+				define('MB_ENABLED', true);
 				mb_internal_encoding('UTF-8');
 			}
 			else
 			{
-				define('MB_ENABLED', FALSE);
+				define('MB_ENABLED', false);
 			}
 		}
 		else
 		{
 			log_message('debug', "UTF-8 Support Disabled");
-			define('UTF8_ENABLED', FALSE);
+			define('UTF8_ENABLED', false);
 		}
 	}
 
@@ -84,7 +84,7 @@ class CI_Utf8 {
 	 */
 	function clean_string($str)
 	{
-		if ($this->_is_ascii($str) === FALSE)
+		if ($this->_is_ascii($str) === false)
 		{
 			$str = iconv('UTF-8', 'UTF-8//IGNORE', $str);
 		}
@@ -107,7 +107,7 @@ class CI_Utf8 {
 	 */
 	function safe_ascii_for_xml($str)
 	{
-		return remove_invisible_characters($str, FALSE);
+		return remove_invisible_characters($str, false);
 	}
 
 	// --------------------------------------------------------------------
@@ -134,7 +134,7 @@ class CI_Utf8 {
 		}
 		else
 		{
-			return FALSE;
+			return false;
 		}
 
 		return $str;

@@ -18,7 +18,7 @@ class Orders extends CI_Controller {
         $this->load->model('orders_model');
         $this->load->model('clients_model');
         $this->data['title'] = 'Полиграфия / Заказы';
-//        $this->output->enable_profiler('TRUE');
+//        $this->output->enable_profiler('true');
     }
 
 
@@ -126,7 +126,7 @@ class Orders extends CI_Controller {
 
         $this->form_validation->set_rules('name', 'Название', 'trim|required');
 
-        if ($this->form_validation->run() == TRUE)
+        if ($this->form_validation->run() == true)
         {
             $client = array(
                 'name' 			=> $this->input->post('name'),
@@ -162,7 +162,7 @@ class Orders extends CI_Controller {
         $this->form_validation->set_rules('price_client', 'Цену', 'trim|required');
         $this->form_validation->set_rules('price_me', 'Цену', 'trim|required');
 
-        if ($this->form_validation->run() == TRUE)
+        if ($this->form_validation->run() == true)
         {
             $order = array(
                 'client_id' 	=> $this->input->post('client_id'),
@@ -174,7 +174,7 @@ class Orders extends CI_Controller {
                 'price_me' 	    => $this->input->post('price_me'),
                 'description' 	=> $this->input->post('description'),
             );
-            $this->orders_model->add( $order );
+            $this->orders_model->addOrder($order);
             redirect('orders');
         }
         $this->data['form_action'] = 'orders/add/';

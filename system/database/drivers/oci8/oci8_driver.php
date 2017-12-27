@@ -121,7 +121,7 @@ class CI_DB_oci8_driver extends CI_DB {
     public function db_select()
     {
         // Not in Oracle - schemas are actually usernames
-        return TRUE;
+        return true;
     }
     
     // --------------------------------------------------------------------
@@ -136,8 +136,13 @@ class CI_DB_oci8_driver extends CI_DB {
      */
     public function db_set_charset($charset, $collation)
     {
+
+        //Let's use the unused params
+        if(isset($charset)===false && isset($collation)===false)
+            return false;
+        
         // @todo - add support if needed
-        return TRUE;
+        return true;
     }
     
     // --------------------------------------------------------------------
@@ -166,7 +171,7 @@ class CI_DB_oci8_driver extends CI_DB {
     {
         // oracle must parse the query before it is run. All of the actions with
         // the query are based on the statement id returned by ociparse
-        $this->stmt_id = FALSE;
+        $this->stmt_id = false;
         $this->_set_stmt_id($sql);
         oci_set_prefetch($this->stmt_id, 1000);
         return oci_execute($this->stmt_id, $this->_commit);
@@ -239,35 +244,35 @@ class CI_DB_oci8_driver extends CI_DB {
      */
     public function stored_procedure($package, $procedure, $params)
     {
-        if ($package == '' OR $procedure == '' OR ! is_array($params))
+        if ($package == '' or $procedure == '' or ! is_array($params))
         {
             if ($this->db_debug)
             {
                 log_message('error', 'Invalid query: '.$package.'.'.$procedure);
                 return $this->display_error('db_invalid_query');
             }
-            return FALSE;
+            return false;
         }
         
         // build the query string
         $sql = "begin $package.$procedure(";
         
-        $have_cursor = FALSE;
+        $have_cursor = false;
         foreach ($params as $param)
         {
             $sql .= $param['name'] . ",";
             
             if (array_key_exists('type', $param) && ($param['type'] === OCI_B_CURSOR))
             {
-                $have_cursor = TRUE;
+                $have_cursor = true;
             }
         }
         $sql = trim($sql, ",") . "); end;";
         
-        $this->stmt_id = FALSE;
+        $this->stmt_id = false;
         $this->_set_stmt_id($sql);
         $this->_bind_params($params);
-        $this->query($sql, FALSE, $have_cursor);
+        $this->query($sql, false, $have_cursor);
     }
     
     // --------------------------------------------------------------------
@@ -280,7 +285,7 @@ class CI_DB_oci8_driver extends CI_DB {
      */
     private function _bind_params($params)
     {
-        if ( ! is_array($params) OR ! is_resource($this->stmt_id))
+        if ( ! is_array($params) or ! is_resource($this->stmt_id))
         {
             return;
         }
@@ -307,26 +312,26 @@ class CI_DB_oci8_driver extends CI_DB {
      * @access	public
      * @return	bool
      */
-    public function trans_begin($test_mode = FALSE)
+    public function trans_begin($test_mode = false)
     {
         if ( ! $this->trans_enabled)
         {
-            return TRUE;
+            return true;
         }
         
         // When transactions are nested we only begin/commit/rollback the outermost ones
         if ($this->_trans_depth > 0)
         {
-            return TRUE;
+            return true;
         }
         
         // Reset the transaction failure flag.
-        // If the $test_mode flag is set to TRUE transactions will be rolled back
+        // If the $test_mode flag is set to true transactions will be rolled back
         // even if the queries produce a successful result.
-        $this->_trans_failure = ($test_mode === TRUE) ? TRUE : FALSE;
+        $this->_trans_failure = ($test_mode === true) ? true : false;
         
         $this->_commit = OCI_DEFAULT;
-        return TRUE;
+        return true;
     }
     
     // --------------------------------------------------------------------
@@ -341,13 +346,13 @@ class CI_DB_oci8_driver extends CI_DB {
     {
         if ( ! $this->trans_enabled)
         {
-            return TRUE;
+            return true;
         }
         
         // When transactions are nested we only begin/commit/rollback the outermost ones
         if ($this->_trans_depth > 0)
         {
-            return TRUE;
+            return true;
         }
         
         $ret = oci_commit($this->conn_id);
@@ -367,13 +372,13 @@ class CI_DB_oci8_driver extends CI_DB {
     {
         if ( ! $this->trans_enabled)
         {
-            return TRUE;
+            return true;
         }
         
         // When transactions are nested we only begin/commit/rollback the outermost ones
         if ($this->_trans_depth > 0)
         {
-            return TRUE;
+            return true;
         }
         
         $ret = oci_rollback($this->conn_id);
@@ -391,7 +396,7 @@ class CI_DB_oci8_driver extends CI_DB {
      * @param	bool	whether or not the string will be used in a LIKE condition
      * @return  string
      */
-    public function escape_str($str, $like = FALSE)
+    public function escape_str($str, $like = false)
     {
         if (is_array($str))
         {
@@ -406,7 +411,7 @@ class CI_DB_oci8_driver extends CI_DB {
         $str = remove_invisible_characters($str);
         
         // escape LIKE condition wildcards
-        if ($like === TRUE)
+        if ($like === true)
         {
             $str = str_replace(	array('%', '_', $this->_like_escape_chr),
                 array($this->_like_escape_chr.'%', $this->_like_escape_chr.'_', $this->_like_escape_chr.$this->_like_escape_chr),
@@ -462,9 +467,9 @@ class CI_DB_oci8_driver extends CI_DB {
             return 0;
         }
         
-        $query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, TRUE, NULL, FALSE));
+        $query = $this->query($this->_count_string . $this->_protect_identifiers('numrows') . " FROM " . $this->_protect_identifiers($table, true, null, false));
         
-        if ($query == FALSE)
+        if ($query == false)
         {
             return 0;
         }
@@ -485,11 +490,11 @@ class CI_DB_oci8_driver extends CI_DB {
      * @param	boolean
      * @return	string
      */
-    protected function _list_tables($prefix_limit = FALSE)
+    protected function _list_tables($prefix_limit = false)
     {
         $sql = "SELECT TABLE_NAME FROM ALL_TABLES";
         
-        if ($prefix_limit !== FALSE AND $this->dbprefix != '')
+        if ($prefix_limit !== false and $this->dbprefix != '')
         {
             $sql .= " WHERE TABLE_NAME LIKE '".$this->escape_like_str($this->dbprefix)."%' ".sprintf($this->_like_escape_str, $this->_like_escape_chr);
         }
@@ -579,7 +584,7 @@ class CI_DB_oci8_driver extends CI_DB {
         
         foreach ($this->_reserved_identifiers as $id)
         {
-            if (strpos($item, '.'.$id) !== FALSE)
+            if (strpos($item, '.'.$id) !== false)
             {
                 $str = $this->_escape_char. str_replace('.', $this->_escape_char.'.', $item);
                 
@@ -588,7 +593,7 @@ class CI_DB_oci8_driver extends CI_DB {
             }
         }
         
-        if (strpos($item, '.') !== FALSE)
+        if (strpos($item, '.') !== false)
         {
             $str = $this->_escape_char.str_replace('.', $this->_escape_char.'.'.$this->_escape_char, $item).$this->_escape_char;
         }
@@ -684,7 +689,7 @@ class CI_DB_oci8_driver extends CI_DB {
      * @param	array	the limit clause
      * @return	string
      */
-    protected function _update($table, $values, $where, $orderby = array(), $limit = FALSE)
+    protected function _update($table, $values, $where, $orderby = array(), $limit = false)
     {
         foreach ($values as $key => $val)
         {
@@ -697,7 +702,7 @@ class CI_DB_oci8_driver extends CI_DB {
         
         $sql = "UPDATE ".$table." SET ".implode(', ', $valstr);
         
-        $sql .= ($where != '' AND count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
+        $sql .= ($where != '' and count($where) >=1) ? " WHERE ".implode(" ", $where) : '';
         
         $sql .= $orderby.$limit;
         
@@ -735,11 +740,11 @@ class CI_DB_oci8_driver extends CI_DB {
      * @param	string	the limit clause
      * @return	string
      */
-    protected function _delete($table, $where = array(), $like = array(), $limit = FALSE)
+    protected function _delete($table, $where = array(), $like = array(), $limit = false)
     {
         $conditions = '';
         
-        if (count($where) > 0 OR count($like) > 0)
+        if (count($where) > 0 or count($like) > 0)
         {
             $conditions = "\nWHERE ";
             $conditions .= implode("\n", $this->ar_where);
@@ -780,7 +785,7 @@ class CI_DB_oci8_driver extends CI_DB {
         }
         
         // remember that we used limits
-        $this->limit_used = TRUE;
+        $this->limit_used = true;
         
         return $newsql;
     }

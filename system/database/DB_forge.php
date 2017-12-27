@@ -95,7 +95,7 @@ class CI_DB_forge {
 	 * @param	string	type
 	 * @return	void
 	 */
-	function add_key($key = '', $primary = FALSE)
+	function add_key($key = '', $primary = false)
 	{
 		if (is_array($key))
 		{
@@ -112,7 +112,7 @@ class CI_DB_forge {
 			show_error('Key information is required for that operation.');
 		}
 
-		if ($primary === TRUE)
+		if ($primary === true)
 		{
 			$this->primary_keys[] = $key;
 		}
@@ -146,14 +146,14 @@ class CI_DB_forge {
 										'id' => array(
 													'type' => 'INT',
 													'constraint' => 9,
-													'auto_increment' => TRUE
+													'auto_increment' => true
 													)
 								));
-				$this->add_key('id', TRUE);
+				$this->add_key('id', true);
 			}
 			else
 			{
-				if (strpos($field, ' ') === FALSE)
+				if (strpos($field, ' ') === false)
 				{
 					show_error('Field information is required for that operation.');
 				}
@@ -178,7 +178,7 @@ class CI_DB_forge {
 	 * @param	string	the table name
 	 * @return	bool
 	 */
-	function create_table($table = '', $if_not_exists = FALSE)
+	function create_table($table = '', $if_not_exists = false)
 	{
 		if ($table == '')
 		{
@@ -229,7 +229,7 @@ class CI_DB_forge {
 	 */
 	function rename_table($table_name, $new_table_name)
 	{
-		if ($table_name == '' OR $new_table_name == '')
+		if ($table_name == '' or $new_table_name == '')
 		{
 			show_error('A table name is required for that operation.');
 		}
@@ -272,13 +272,13 @@ class CI_DB_forge {
 
 			$this->_reset();
 
-			if ($this->db->query($sql) === FALSE)
+			if ($this->db->query($sql) === false)
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 
 	}
 
@@ -350,13 +350,13 @@ class CI_DB_forge {
 
 			$this->_reset();
 
-			if ($this->db->query($sql) === FALSE)
+			if ($this->db->query($sql) === false)
 			{
-				return FALSE;
+				return false;
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	// --------------------------------------------------------------------

@@ -28,14 +28,14 @@
  */
 class CI_DB_result {
 
-	var $conn_id				= NULL;
-	var $result_id				= NULL;
+	var $conn_id				= null;
+	var $result_id				= null;
 	var $result_array			= array();
 	var $result_object			= array();
 	var $custom_result_object	= array();
 	var $current_row			= 0;
 	var $num_rows				= 0;
-	var $row_data				= NULL;
+	var $row_data				= null;
 
 
 	/**
@@ -67,13 +67,19 @@ class CI_DB_result {
 			return $this->custom_result_object[$class_name];
 		}
 
-		if ($this->result_id === FALSE OR $this->num_rows() == 0)
+		if ($this->result_id === false or $this->num_rows() == 0)
 		{
 			return array();
 		}
 
 		// add the data to the object
-		$this->_data_seek(0);
+		$flag = $this->_data_seek(0);
+		
+		if ( is_null($flag) === true )
+		{
+			trigger_error('Data Seek failed');
+		}
+		
 		$result_object = array();
 
 		while ($row = $this->_fetch_object())
@@ -108,14 +114,22 @@ class CI_DB_result {
 		}
 
 		// In the event that query caching is on the result_id variable
-		// will return FALSE since there isn't a valid SQL resource so
+		// will return false since there isn't a valid SQL resource so
 		// we'll simply return an empty array.
-		if ($this->result_id === FALSE OR $this->num_rows() == 0)
+		if ($this->result_id === false or $this->num_rows() == 0)
 		{
 			return array();
 		}
 
-		$this->_data_seek(0);
+		$flag = $this->_data_seek(0);
+		
+		if ( is_null($flag) === true )
+		{
+			trigger_error('Data Seek failed');
+		}
+		
+		
+		
 		while ($row = $this->_fetch_object())
 		{
 			$this->result_object[] = $row;
@@ -140,14 +154,20 @@ class CI_DB_result {
 		}
 
 		// In the event that query caching is on the result_id variable
-		// will return FALSE since there isn't a valid SQL resource so
+		// will return false since there isn't a valid SQL resource so
 		// we'll simply return an empty array.
-		if ($this->result_id === FALSE OR $this->num_rows() == 0)
+		if ($this->result_id === false or $this->num_rows() == 0)
 		{
 			return array();
 		}
-
-		$this->_data_seek(0);
+		
+		$flag = $this->_data_seek(0);
+		
+		if ( is_null($flag) === true )
+		{
+			trigger_error('Data Seek failed');
+		}
+		
 		while ($row = $this->_fetch_assoc())
 		{
 			$this->result_array[] = $row;
@@ -176,7 +196,7 @@ class CI_DB_result {
 				$this->row_data = $this->row_array(0);
 			}
 
-			// array_key_exists() instead of isset() to allow for MySQL NULL values
+			// array_key_exists() instead of isset() to allow for MySQL null values
 			if (array_key_exists($n, $this->row_data))
 			{
 				return $this->row_data[$n];
@@ -198,7 +218,7 @@ class CI_DB_result {
 	 * @access	public
 	 * @return	object
 	 */
-	public function set_row($key, $value = NULL)
+	public function set_row($key, $value = null)
 	{
 		// We cache the row data for subsequent uses
 		if ( ! is_array($this->row_data))
@@ -216,7 +236,7 @@ class CI_DB_result {
 			return;
 		}
 
-		if ($key != '' AND ! is_null($value))
+		if ($key != '' and ! is_null($value))
 		{
 			$this->row_data[$key] = $value;
 		}
@@ -239,7 +259,7 @@ class CI_DB_result {
 			return $result;
 		}
 
-		if ($n != $this->current_row AND isset($result[$n]))
+		if ($n != $this->current_row and isset($result[$n]))
 		{
 			$this->current_row = $n;
 		}
@@ -262,7 +282,7 @@ class CI_DB_result {
 			return $result;
 		}
 
-		if ($n != $this->current_row AND isset($result[$n]))
+		if ($n != $this->current_row and isset($result[$n]))
 		{
 			$this->current_row = $n;
 		}
@@ -287,7 +307,7 @@ class CI_DB_result {
 			return $result;
 		}
 
-		if ($n != $this->current_row AND isset($result[$n]))
+		if ($n != $this->current_row and isset($result[$n]))
 		{
 			$this->current_row = $n;
 		}
@@ -398,8 +418,18 @@ class CI_DB_result {
 	public function num_fields() { return 0; }
 	public function list_fields() { return array(); }
 	public function field_data() { return array(); }
-	public function free_result() { return TRUE; }
-	protected function _data_seek() { return TRUE; }
+	public function free_result() { return true; }
+	protected function _data_seek($n=0) 
+	{ 
+		if($n==0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	protected function _fetch_assoc() { return array(); }
 	protected function _fetch_object() { return array(); }
 

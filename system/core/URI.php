@@ -158,7 +158,7 @@ class CI_URI {
 	function _set_uri_string($str)
 	{
 		// Filter out control characters
-		$str = remove_invisible_characters($str, FALSE);
+		$str = remove_invisible_characters($str, false);
 
 		// If the URI contains only a slash we'll kill it
 		$this->uri_string = ($str == '/') ? '' : $str;
@@ -177,7 +177,7 @@ class CI_URI {
 	 */
 	private function _detect_uri()
 	{
-		if ( ! isset($_SERVER['REQUEST_URI']) OR ! isset($_SERVER['SCRIPT_NAME']))
+		if ( ! isset($_SERVER['REQUEST_URI']) or ! isset($_SERVER['SCRIPT_NAME']))
 		{
 			return '';
 		}
@@ -250,7 +250,7 @@ class CI_URI {
 	 */
 	function _filter_uri($str)
 	{
-		if ($str != '' && $this->config->item('permitted_uri_chars') != '' && $this->config->item('enable_query_strings') == FALSE)
+		if ($str != '' && $this->config->item('permitted_uri_chars') != '' && $this->config->item('enable_query_strings') == false)
 		{
 			// preg_quote() in PHP 5.3 escapes -, so the str_replace() and addition of - to preg_quote() is to maintain backwards
 			// compatibility as many are unaware of how characters in the permitted_uri_chars will be parsed as a regex pattern
@@ -320,8 +320,8 @@ class CI_URI {
 	 */
 	function _reindex_segments()
 	{
-		array_unshift($this->segments, NULL);
-		array_unshift($this->rsegments, NULL);
+		array_unshift($this->segments, null);
+		array_unshift($this->rsegments, null);
 		unset($this->segments[0]);
 		unset($this->rsegments[0]);
 	}
@@ -338,7 +338,7 @@ class CI_URI {
 	 * @param	bool
 	 * @return	string
 	 */
-	function segment($n, $no_result = FALSE)
+	function segment($n, $no_result = false)
 	{
 		return ( ! isset($this->segments[$n])) ? $no_result : $this->segments[$n];
 	}
@@ -357,7 +357,7 @@ class CI_URI {
 	 * @param	bool
 	 * @return	string
 	 */
-	function rsegment($n, $no_result = FALSE)
+	function rsegment($n, $no_result = false)
 	{
 		return ( ! isset($this->rsegments[$n])) ? $no_result : $this->rsegments[$n];
 	}
@@ -447,7 +447,7 @@ class CI_URI {
 			$retval = array();
 			foreach ($default as $val)
 			{
-				$retval[$val] = FALSE;
+				$retval[$val] = false;
 			}
 			return $retval;
 		}
@@ -465,7 +465,7 @@ class CI_URI {
 			}
 			else
 			{
-				$retval[$seg] = FALSE;
+				$retval[$seg] = false;
 				$lastval = $seg;
 			}
 
@@ -478,7 +478,7 @@ class CI_URI {
 			{
 				if ( ! array_key_exists($val, $retval))
 				{
-					$retval[$val] = FALSE;
+					$retval[$val] = false;
 				}
 			}
 		}

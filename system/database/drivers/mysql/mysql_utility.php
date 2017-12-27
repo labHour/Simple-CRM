@@ -79,7 +79,7 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 	{
 		if (count($params) == 0)
 		{
-			return FALSE;
+			return false;
 		}
 
 		// Extract the prefs for simplicity
@@ -90,7 +90,7 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 		foreach ((array)$tables as $table)
 		{
 			// Is the table in the "ignore" list?
-			if (in_array($table, (array)$ignore, TRUE))
+			if (in_array($table, (array)$ignore, true))
 			{
 				continue;
 			}
@@ -99,7 +99,7 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 			$query = $this->db->query("SHOW CREATE TABLE `".$this->db->database.'`.`'.$table.'`');
 
 			// No result means the table name was invalid
-			if ($query === FALSE)
+			if ($query === false)
 			{
 				continue;
 			}
@@ -107,7 +107,7 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 			// Write out the table schema
 			$output .= '#'.$newline.'# TABLE STRUCTURE FOR: '.$table.$newline.'#'.$newline.$newline;
 
-			if ($add_drop == TRUE)
+			if ($add_drop == true)
 			{
 				$output .= 'DROP TABLE IF EXISTS '.$table.';'.$newline.$newline;
 			}
@@ -123,7 +123,7 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 			}
 
 			// If inserts are not needed we're done...
-			if ($add_insert == FALSE)
+			if ($add_insert == false)
 			{
 				continue;
 			}
@@ -149,8 +149,8 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 				$is_int[$i] = (in_array(
 										strtolower(mysql_field_type($query->result_id, $i)),
 										array('tinyint', 'smallint', 'mediumint', 'int', 'bigint'), //, 'timestamp'),
-										TRUE)
-										) ? TRUE : FALSE;
+										true)
+										) ? true : false;
 
 				// Create a string of field names
 				$field_str .= '`'.$field->name.'`, ';
@@ -169,15 +169,15 @@ class CI_DB_mysql_utility extends CI_DB_utility {
 				$i = 0;
 				foreach ($row as $v)
 				{
-					// Is the value NULL?
-					if ($v === NULL)
+					// Is the value null?
+					if ($v === null)
 					{
-						$val_str .= 'NULL';
+						$val_str .= 'null';
 					}
 					else
 					{
 						// Escape the data if it's not an integer
-						if ($is_int[$i] == FALSE)
+						if ($is_int[$i] == false)
 						{
 							$val_str .= $this->db->escape($v);
 						}

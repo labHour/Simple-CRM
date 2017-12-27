@@ -92,7 +92,7 @@ class CI_DB_utility extends CI_DB_forge {
 		}
 		else
 		{
-			return ( ! in_array($database_name, $this->list_databases())) ? FALSE : TRUE;
+			return ( ! in_array($database_name, $this->list_databases())) ? false : true;
 		}
 	}
 
@@ -200,7 +200,7 @@ class CI_DB_utility extends CI_DB_forge {
 	 */
 	function csv_from_result($query, $delim = ",", $newline = "\n", $enclosure = '"')
 	{
-		if ( ! is_object($query) OR ! method_exists($query, 'list_fields'))
+		if ( ! is_object($query) or ! method_exists($query, 'list_fields'))
 		{
 			show_error('You must submit a valid result object');
 		}
@@ -242,7 +242,7 @@ class CI_DB_utility extends CI_DB_forge {
 	 */
 	function xml_from_result($query, $params = array())
 	{
-		if ( ! is_object($query) OR ! method_exists($query, 'list_fields'))
+		if ( ! is_object($query) or ! method_exists($query, 'list_fields'))
 		{
 			show_error('You must submit a valid result object');
 		}
@@ -306,8 +306,8 @@ class CI_DB_utility extends CI_DB_forge {
 							'ignore'		=> array(),
 							'filename'		=> '',
 							'format'		=> 'gzip', // gzip, zip, txt
-							'add_drop'		=> TRUE,
-							'add_insert'	=> TRUE,
+							'add_drop'		=> true,
+							'add_insert'	=> true,
 							'newline'		=> "\n"
 						);
 
@@ -335,7 +335,7 @@ class CI_DB_utility extends CI_DB_forge {
 		// ------------------------------------------------------
 
 		// Validate the format
-		if ( ! in_array($prefs['format'], array('gzip', 'zip', 'txt'), TRUE))
+		if ( ! in_array($prefs['format'], array('gzip', 'zip', 'txt'), true))
 		{
 			$prefs['format'] = 'txt';
 		}
@@ -344,8 +344,8 @@ class CI_DB_utility extends CI_DB_forge {
 
 		// Is the encoder supported?  If not, we'll either issue an
 		// error or use plain text depending on the debug settings
-		if (($prefs['format'] == 'gzip' AND ! function_exists('gzencode'))
-		OR ($prefs['format'] == 'zip'  AND ! function_exists('gzcompress')))
+		if (($prefs['format'] == 'gzip' and ! function_exists('gzencode'))
+		or ($prefs['format'] == 'zip'  and ! function_exists('gzcompress')))
 		{
 			if ($this->db->db_debug)
 			{
@@ -358,7 +358,7 @@ class CI_DB_utility extends CI_DB_forge {
 		// ------------------------------------------------------
 
 		// Set the filename if not provided - Only needed with Zip files
-		if ($prefs['filename'] == '' AND $prefs['format'] == 'zip')
+		if ($prefs['filename'] == '' and $prefs['format'] == 'zip')
 		{
 			$prefs['filename'] = (count($prefs['tables']) == 1) ? $prefs['tables'] : $this->db->database;
 			$prefs['filename'] .= '_'.date('Y-m-d_H-i', time());

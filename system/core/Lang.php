@@ -62,18 +62,18 @@ class CI_Lang {
 	 * @param 	string	alternative path to look for language file
 	 * @return	mixed
 	 */
-	function load($langfile = '', $idiom = '', $return = FALSE, $add_suffix = TRUE, $alt_path = '')
+	function load($langfile = '', $idiom = '', $return = false, $add_suffix = true, $alt_path = '')
 	{
 		$langfile = str_replace('.php', '', $langfile);
 
-		if ($add_suffix == TRUE)
+		if ($add_suffix == true)
 		{
 			$langfile = str_replace('_lang.', '', $langfile).'_lang';
 		}
 
 		$langfile .= '.php';
 
-		if (in_array($langfile, $this->is_loaded, TRUE))
+		if (in_array($langfile, $this->is_loaded, true))
 		{
 			return;
 		}
@@ -89,23 +89,23 @@ class CI_Lang {
 		// Determine where the language file is and load it
 		if ($alt_path != '' && file_exists($alt_path.'language/'.$idiom.'/'.$langfile))
 		{
-			include($alt_path.'language/'.$idiom.'/'.$langfile);
+			include $alt_path.'language/'.$idiom.'/'.$langfile;
 		}
 		else
 		{
-			$found = FALSE;
+			$found = false;
 
-			foreach (get_instance()->load->get_package_paths(TRUE) as $package_path)
+			foreach (get_instance()->load->get_package_paths(true) as $package_path)
 			{
 				if (file_exists($package_path.'language/'.$idiom.'/'.$langfile))
 				{
-					include($package_path.'language/'.$idiom.'/'.$langfile);
-					$found = TRUE;
+					include $package_path.'language/'.$idiom.'/'.$langfile;
+					$found = true;
 					break;
 				}
 			}
 
-			if ($found !== TRUE)
+			if ($found !== true)
 			{
 				show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
 			}
@@ -118,7 +118,7 @@ class CI_Lang {
 			return;
 		}
 
-		if ($return == TRUE)
+		if ($return == true)
 		{
 			return $lang;
 		}
@@ -128,7 +128,7 @@ class CI_Lang {
 		unset($lang);
 
 		log_message('debug', 'Language file loaded: language/'.$idiom.'/'.$langfile);
-		return TRUE;
+		return true;
 	}
 
 	// --------------------------------------------------------------------
@@ -142,10 +142,10 @@ class CI_Lang {
 	 */
 	function line($line = '')
 	{
-		$value = ($line == '' OR ! isset($this->language[$line])) ? FALSE : $this->language[$line];
+		$value = ($line == '' or ! isset($this->language[$line])) ? false : $this->language[$line];
 
 		// Because killer robots like unicorns!
-		if ($value === FALSE)
+		if ($value === false)
 		{
 			log_message('error', 'Could not find the language line "'.$line.'"');
 		}

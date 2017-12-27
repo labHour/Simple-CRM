@@ -88,7 +88,7 @@ class CI_Exceptions {
 	{
 		$severity = ( ! isset($this->levels[$severity])) ? $severity : $this->levels[$severity];
 
-		log_message('error', 'Severity: '.$severity.'  --> '.$message. ' '.$filepath.' '.$line, TRUE);
+		log_message('error', 'Severity: '.$severity.'  --> '.$message. ' '.$filepath.' '.$line, true);
 	}
 
 	// --------------------------------------------------------------------
@@ -101,7 +101,7 @@ class CI_Exceptions {
 	 * @param 	bool	log error yes/no
 	 * @return	string
 	 */
-	function show_404($page = '', $log_error = TRUE)
+	function show_404($page = '', $log_error = true)
 	{
 		$heading = "404 Page Not Found";
 		$message = "The page you requested was not found.";
@@ -138,12 +138,18 @@ class CI_Exceptions {
 
 		$message = '<p>'.implode('</p><p>', ( ! is_array($message)) ? array($message) : $message).'</p>';
 
+		if(isset($heading) === true && $template === 'error_general'&& $status_code === 500 )
+			{
+				$heading = '';
+				$message = $heading.$message;
+			}
+
 		if (ob_get_level() > $this->ob_level + 1)
 		{
 			ob_end_flush();
 		}
 		ob_start();
-		include(APPPATH.'errors/'.$template.'.php');
+		include APPPATH.'errors/'.$template.'.php';
 		$buffer = ob_get_contents();
 		ob_end_clean();
 		return $buffer;
@@ -168,7 +174,7 @@ class CI_Exceptions {
 		$filepath = str_replace("\\", "/", $filepath);
 
 		// For safety reasons we do not show the full file path
-		if (FALSE !== strpos($filepath, '/'))
+		if (false !== strpos($filepath, '/'))
 		{
 			$x = explode('/', $filepath);
 			$filepath = $x[count($x)-2].'/'.end($x);
@@ -179,10 +185,14 @@ class CI_Exceptions {
 			ob_end_flush();
 		}
 		ob_start();
-		include(APPPATH.'errors/error_php.php');
+		include APPPATH.'errors/error_php.php';
 		$buffer = ob_get_contents();
 		ob_end_clean();
-		echo $buffer;
+
+		if(isset($message)===false && isset($line)===false)
+			echo $buffer;
+		else
+			echo $buffer;
 	}
 
 

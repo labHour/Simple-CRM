@@ -93,11 +93,11 @@ class CI_Config {
 	 * @param   boolean  true if errors should just return false, false if an error message should be displayed
 	 * @return	boolean	if the file was loaded correctly
 	 */
-	function load($file = '', $use_sections = FALSE, $fail_gracefully = FALSE)
+	function load($file = '', $use_sections = false, $fail_gracefully = false)
 	{
 		$file = ($file == '') ? 'config' : str_replace('.php', '', $file);
-		$found = FALSE;
-		$loaded = FALSE;
+		$found = false;
+		$loaded = false;
 
 		foreach ($this->_config_paths as $path)
 		{
@@ -109,36 +109,36 @@ class CI_Config {
 			{
 				$file_path = $path.'config/'.$location.'.php';
 
-				if (in_array($file_path, $this->is_loaded, TRUE))
+				if (in_array($file_path, $this->is_loaded, true))
 				{
-					$loaded = TRUE;
+					$loaded = true;
 					continue 2;
 				}
 
 				if (file_exists($file_path))
 				{
-					$found = TRUE;
+					$found = true;
 					break;
 				}
 			}
 
-			if ($found === FALSE)
+			if ($found === false)
 			{
 				continue;
 			}
 
-			include($file_path);
+			include $file_path;
 
-			if ( ! isset($config) OR ! is_array($config))
+			if ( ! isset($config) or ! is_array($config))
 			{
-				if ($fail_gracefully === TRUE)
+				if ($fail_gracefully === true)
 				{
-					return FALSE;
+					return false;
 				}
 				show_error('Your '.$file_path.' file does not appear to contain a valid configuration array.');
 			}
 
-			if ($use_sections === TRUE)
+			if ($use_sections === true)
 			{
 				if (isset($this->config[$file]))
 				{
@@ -157,21 +157,21 @@ class CI_Config {
 			$this->is_loaded[] = $file_path;
 			unset($config);
 
-			$loaded = TRUE;
+			$loaded = true;
 			log_message('debug', 'Config file loaded: '.$file_path);
 			break;
 		}
 
-		if ($loaded === FALSE)
+		if ($loaded === false)
 		{
-			if ($fail_gracefully === TRUE)
+			if ($fail_gracefully === true)
 			{
-				return FALSE;
+				return false;
 			}
 			show_error('The configuration file '.$file.'.php'.' does not exist.');
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	// --------------------------------------------------------------------
@@ -192,7 +192,7 @@ class CI_Config {
 		{
 			if ( ! isset($this->config[$item]))
 			{
-				return FALSE;
+				return false;
 			}
 
 			$pref = $this->config[$item];
@@ -201,12 +201,12 @@ class CI_Config {
 		{
 			if ( ! isset($this->config[$index]))
 			{
-				return FALSE;
+				return false;
 			}
 
 			if ( ! isset($this->config[$index][$item]))
 			{
-				return FALSE;
+				return false;
 			}
 
 			$pref = $this->config[$index][$item];
@@ -229,7 +229,7 @@ class CI_Config {
 	{
 		if ( ! isset($this->config[$item]))
 		{
-			return FALSE;
+			return false;
 		}
 		if( trim($this->config[$item]) == '')
 		{
@@ -256,9 +256,9 @@ class CI_Config {
 			return $this->slash_item('base_url').$this->item('index_page');
 		}
 
-		if ($this->item('enable_query_strings') == FALSE)
+		if ($this->item('enable_query_strings') == false)
 		{
-			$suffix = ($this->item('url_suffix') == FALSE) ? '' : $this->item('url_suffix');
+			$suffix = ($this->item('url_suffix') == false) ? '' : $this->item('url_suffix');
 			return $this->slash_item('base_url').$this->slash_item('index_page').$this->_uri_string($uri).$suffix;
 		}
 		else
@@ -293,7 +293,7 @@ class CI_Config {
 	 */
 	protected function _uri_string($uri)
 	{
-		if ($this->item('enable_query_strings') == FALSE)
+		if ($this->item('enable_query_strings') == false)
 		{
 			if (is_array($uri))
 			{

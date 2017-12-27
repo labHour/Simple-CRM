@@ -43,7 +43,7 @@ class CI_DB_cubrid_utility extends CI_DB_utility {
 		}
 		else
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -61,10 +61,13 @@ class CI_DB_cubrid_utility extends CI_DB_utility {
 	 */
 	function _optimize_table($table)
 	{
+		//Let's use the unesd param.
+		if(isset($table)===false)
+			return false;
 		// No SQL based support in CUBRID as of version 8.4.0. Database or
 		// table optimization can be performed using CUBRID Manager
 		// database administration tool. See the link above for more info.
-		return FALSE;
+		return false;
 	}
 
 	// --------------------------------------------------------------------
@@ -81,10 +84,13 @@ class CI_DB_cubrid_utility extends CI_DB_utility {
 	 */
 	function _repair_table($table)
 	{
+		//Let's use the unesd param.
+		if(isset($table)===false)
+			return false;
 		// Not supported in CUBRID as of version 8.4.0. Database or
 		// table consistency can be checked using CUBRID Manager
 		// database administration tool. See the link above for more info.
-		return FALSE;
+		return false;
 	}
 
 	// --------------------------------------------------------------------
@@ -97,6 +103,9 @@ class CI_DB_cubrid_utility extends CI_DB_utility {
 	 */
 	function _backup($params = array())
 	{
+		//Let's use the unesd param.
+		if(isset($params)===false)
+			return $this->db->display_error('db_unsuported_feature');
 		// No SQL based support in CUBRID as of version 8.4.0. Database or
 		// table backup can be performed using CUBRID Manager
 		// database administration tool.

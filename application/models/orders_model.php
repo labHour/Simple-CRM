@@ -15,7 +15,7 @@ class Orders_model extends Crud_model {
      * @param array $data данные о заказе
      * @return int id заказа
      */
-    public function add($data)
+    public function addOrder($data)
     {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
@@ -75,7 +75,7 @@ class Orders_model extends Crud_model {
      */
     public function delete($id)
     {
-        if ($id != NULL)
+        if ($id != null)
         {
             $this->db->where('id', $id);
             $this->db->delete($this->table);

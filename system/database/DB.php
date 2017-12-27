@@ -24,13 +24,15 @@
  * @param 	string
  * @param 	bool	Determines if active record should be used or not
  */
-function &DB($params = '', $active_record_override = NULL)
+function &DB($params = '', $active_record_override = null)
 {
 	// Load the DB config file if a DSN string wasn't passed
-	if (is_string($params) AND strpos($params, '://') === FALSE)
+	if (is_string($params) and strpos($params, '://') === false)
 	{
+		$file_path = APPPATH.'config/'.ENVIRONMENT.'/database.php';
+
 		// Is the config file in the environment folder?
-		if ( ! defined('ENVIRONMENT') OR ! file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/database.php'))
+		if ( ! defined('ENVIRONMENT') or ! file_exists($file_path))
 		{
 			if ( ! file_exists($file_path = APPPATH.'config/database.php'))
 			{
@@ -38,9 +40,9 @@ function &DB($params = '', $active_record_override = NULL)
 			}
 		}
 
-		include($file_path);
+		include $file_path;
 
-		if ( ! isset($db) OR count($db) == 0)
+		if ( ! isset($db) or count($db) == 0)
 		{
 			show_error('No database connection settings were found in the database config file.');
 		}
@@ -50,7 +52,7 @@ function &DB($params = '', $active_record_override = NULL)
 			$active_group = $params;
 		}
 
-		if ( ! isset($active_group) OR ! isset($db[$active_group]))
+		if ( ! isset($active_group) or ! isset($db[$active_group]))
 		{
 			show_error('You have specified an invalid database connection group.');
 		}
@@ -67,7 +69,7 @@ function &DB($params = '', $active_record_override = NULL)
 		 *  $dsn = 'driver://username:password@hostname/database';
 		 */
 
-		if (($dns = parse_url($params)) === FALSE)
+		if (($dns = parse_url($params)) === false)
 		{
 			show_error('Invalid DB Connection String');
 		}
@@ -88,13 +90,13 @@ function &DB($params = '', $active_record_override = NULL)
 			foreach ($extra as $key => $val)
 			{
 				// booleans please
-				if (strtoupper($val) == "TRUE")
+				if (strtoupper($val) == "true")
 				{
-					$val = TRUE;
+					$val = true;
 				}
-				elseif (strtoupper($val) == "FALSE")
+				elseif (strtoupper($val) == "false")
 				{
-					$val = FALSE;
+					$val = false;
 				}
 
 				$params[$key] = $val;
@@ -103,7 +105,7 @@ function &DB($params = '', $active_record_override = NULL)
 	}
 
 	// No DB specified yet?  Beat them senseless...
-	if ( ! isset($params['dbdriver']) OR $params['dbdriver'] == '')
+	if ( ! isset($params['dbdriver']) or $params['dbdriver'] == '')
 	{
 		show_error('You have not selected a database type to connect to.');
 	}
@@ -113,16 +115,16 @@ function &DB($params = '', $active_record_override = NULL)
 	// based on whether we're using the active record class or not.
 	// Kudos to Paul for discovering this clever use of eval()
 
-	if ($active_record_override !== NULL)
+	if ($active_record_override !== null)
 	{
 		$active_record = $active_record_override;
 	}
 
-	require_once(BASEPATH.'database/DB_driver.php');
+	require_once BASEPATH.'database/DB_driver.php';
 
-	if ( ! isset($active_record) OR $active_record == TRUE)
+	if ( ! isset($active_record) or $active_record == true)
 	{
-		require_once(BASEPATH.'database/DB_active_rec.php');
+		require_once BASEPATH.'database/DB_active_rec.php';
 
 		if ( ! class_exists('CI_DB'))
 		{
@@ -137,18 +139,18 @@ function &DB($params = '', $active_record_override = NULL)
 		}
 	}
 
-	require_once(BASEPATH.'database/drivers/'.$params['dbdriver'].'/'.$params['dbdriver'].'_driver.php');
+	require_once BASEPATH.'database/drivers/'.$params['dbdriver'].'/'.$params['dbdriver'].'_driver.php';
 
 	// Instantiate the DB adapter
 	$driver = 'CI_DB_'.$params['dbdriver'].'_driver';
 	$DB = new $driver($params);
 
-	if ($DB->autoinit == TRUE)
+	if ($DB->autoinit == true)
 	{
 		$DB->initialize();
 	}
 
-	if (isset($params['stricton']) && $params['stricton'] == TRUE)
+	if (isset($params['stricton']) && $params['stricton'] == true)
 	{
 		$DB->query('SET SESSION sql_mode="STRICT_ALL_TABLES"');
 	}

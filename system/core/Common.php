@@ -37,7 +37,7 @@
 *
 * @access	public
 * @param	string
-* @return	bool	TRUE if the current version is $version or higher
+* @return	bool	true if the current version is $version or higher
 */
 if ( ! function_exists('is_php'))
 {
@@ -48,7 +48,7 @@ if ( ! function_exists('is_php'))
 
 		if ( ! isset($_is_php[$version]))
 		{
-			$_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? FALSE : TRUE;
+			$_is_php[$version] = (version_compare(PHP_VERSION, $version) < 0) ? false : true;
 		}
 
 		return $_is_php[$version];
@@ -60,7 +60,7 @@ if ( ! function_exists('is_php'))
 /**
  * Tests for file writability
  *
- * is_writable() returns TRUE on Windows servers when you really can't write to
+ * is_writable() returns true on Windows servers when you really can't write to
  * the file, based on the read-only attribute.  is_writable() is also unreliable
  * on Unix servers if safe_mode is on.
  *
@@ -72,7 +72,7 @@ if ( ! function_exists('is_really_writable'))
 	function is_really_writable($file)
 	{
 		// If we're on a Unix server with safe_mode off we call is_writable
-		if (DIRECTORY_SEPARATOR == '/' AND ini_get("safe_mode") == FALSE)
+		if (DIRECTORY_SEPARATOR == '/' and ini_get("safe_mode") == false)
 		{
 			return is_writable($file);
 		}
@@ -81,25 +81,29 @@ if ( ! function_exists('is_really_writable'))
 		// write a file then read it.  Bah...
 		if (is_dir($file))
 		{
-			$file = rtrim($file, '/').'/'.md5(mt_rand(1,100).mt_rand(1,100));
+			$options = [
+   				 'cost' => 13,
+			];	
 
-			if (($fp = fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
+			$file = rtrim($file, '/').'/'.password_hash(mt_rand(1,100).mt_rand(1,100), PASSWORD_BCRYPT, $options);
+
+			if (($fp = fopen($file, FOPEN_WRITE_CREATE)) === false)
 			{
-				return FALSE;
+				return false;
 			}
 
 			fclose($fp);
 			chmod($file, DIR_WRITE_MODE);
 			unlink($file);
-			return TRUE;
+			return true;
 		}
-		elseif ( ! is_file($file) OR ($fp = fopen($file, FOPEN_WRITE_CREATE)) === FALSE)
+		elseif ( ! is_file($file) or ($fp = fopen($file, FOPEN_WRITE_CREATE)) === false)
 		{
-			return FALSE;
+			return false;
 		}
 
 		fclose($fp);
-		return TRUE;
+		return true;
 	}
 }
 
@@ -130,7 +134,7 @@ if ( ! function_exists('load_class'))
 			return $_classes[$class];
 		}
 
-		$name = FALSE;
+		$name = false;
 
 		// Look for the class first in the local application/libraries folder
 		// then in the native system/libraries folder
@@ -140,9 +144,9 @@ if ( ! function_exists('load_class'))
 			{
 				$name = $prefix.$class;
 
-				if (class_exists($name) === FALSE)
+				if (class_exists($name) === false)
 				{
-					require($path.$directory.'/'.$class.'.php');
+					require $path.$directory.'/'.$class.'.php';
 				}
 
 				break;
@@ -154,20 +158,25 @@ if ( ! function_exists('load_class'))
 		{
 			$name = config_item('subclass_prefix').$class;
 
-			if (class_exists($name) === FALSE)
+			if (class_exists($name) === false)
 			{
-				require(APPPATH.$directory.'/'.config_item('subclass_prefix').$class.'.php');
+				require APPPATH.$directory.'/'.config_item('subclass_prefix').$class.'.php';
 			}
 		}
 
 		// Did we find the class?
-		if ($name === FALSE)
+		if ($name === false)
 		{
 			trigger_error('Unable to locate the specified class: '.$class.'.php');
 		}
-
+		
+		
+		
 		// Keep track of what we just loaded
-		is_loaded($class);
+		if( is_null(is_loaded($class)) === true )
+		{
+			trigger_error('Failed keeping track of this class'.$class);
+		}
 
 		$_classes[$class] = new $name();
 		return $_classes[$class];
@@ -192,11 +201,11 @@ if ( ! function_exists('is_loaded'))
 		if ($class != '')
 		{
 			$_is_loaded[strtolower($class)] = $class;
-		}
-
+		}	
 		return $_is_loaded;
 	}
 }
+
 
 // ------------------------------------------------------------------------
 
@@ -221,7 +230,7 @@ if ( ! function_exists('get_config'))
 		}
 
 		// Is the config file in the environment folder?
-		if ( ! defined('ENVIRONMENT') OR ! file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/config.php'))
+		if ( ! defined('ENVIRONMENT') or ! file_exists($file_path = APPPATH.'config/'.ENVIRONMENT.'/config.php'))
 		{
 			$file_path = APPPATH.'config/config.php';
 		}
@@ -232,10 +241,10 @@ if ( ! function_exists('get_config'))
 			trigger_error('The configuration file does not exist.');
 		}
 
-		require($file_path);
+		require $file_path;
 
 		// Does the $config array exist in the file?
-		if ( ! isset($config) OR ! is_array($config))
+		if ( ! isset($config) or ! is_array($config))
 		{
 			trigger_error('Your config file does not appear to be formatted correctly.');
 		}
@@ -252,7 +261,8 @@ if ( ! function_exists('get_config'))
 			}
 		}
 
-		return $_config[0] =& $config;
+		$_config[0] =& $config;
+		return $_config[0];
 	}
 }
 
@@ -276,7 +286,7 @@ if ( ! function_exists('config_item'))
 
 			if ( ! isset($config[$item]))
 			{
-				return FALSE;
+				return false;
 			}
 			$_config_item[$item] = $config[$item];
 		}
@@ -304,7 +314,7 @@ if ( ! function_exists('show_error'))
 	function show_error($message, $status_code = 500, $heading = 'An Error Was Encountered')
 	{
 		$_error =& load_class('Exceptions', 'core');
-		echo $_error->show_error($heading, $message, 'error_general', $status_code);
+		echo $_error->show_error( $message, $status_code,$heading);
 		trigger_error('');
 	}
 }
@@ -323,7 +333,7 @@ if ( ! function_exists('show_error'))
 */
 if ( ! function_exists('show_404'))
 {
-	function show_404($page = '', $log_error = TRUE)
+	function show_404($page = '', $log_error = true)
 	{
 		$_error =& load_class('Exceptions', 'core');
 		$_error->show_404($page, $log_error);
@@ -344,7 +354,7 @@ if ( ! function_exists('show_404'))
 */
 if ( ! function_exists('log_message'))
 {
-	function log_message($message, $php_error = FALSE, $level = 'error')
+	function log_message($message, $php_error = false, $level = 'error')
 	{
 		static $_log;
 
@@ -414,12 +424,12 @@ if ( ! function_exists('set_status_header'))
 							505	=> 'HTTP Version Not Supported'
 						);
 
-		if ($code == '' OR ! is_numeric($code))
+		if ($code == '' or ! is_numeric($code))
 		{
 			show_error('Status codes must be numeric', 500);
 		}
 
-		if (isset($stati[$code]) AND $text == '')
+		if (isset($stati[$code]) and $text == '')
 		{
 			$text = $stati[$code];
 		}
@@ -429,19 +439,19 @@ if ( ! function_exists('set_status_header'))
 			show_error('No status text available.  Please check your status code number or supply your own message text.', 500);
 		}
 
-		$server_protocol = (isset($_SERVER['SERVER_PROTOCOL'])) ? $_SERVER['SERVER_PROTOCOL'] : FALSE;
+		$server_protocol = (isset($_SERVER['SERVER_PROTOCOL'])) ? $_SERVER['SERVER_PROTOCOL'] : false;
 
-		if (substr(php_sapi_name(), 0, 3) == 'cgi')
+		if (strcmp(php_sapi_name(), 'cgi', 3) == 0)
 		{
-			header("Status: {$code} {$text}", TRUE);
+			header("Status: {$code} {$text}", true);
 		}
-		elseif ($server_protocol == 'HTTP/1.1' OR $server_protocol == 'HTTP/1.0')
+		elseif ($server_protocol == 'HTTP/1.1' or $server_protocol == 'HTTP/1.0')
 		{
-			header($server_protocol." {$code} {$text}", TRUE, $code);
+			header($server_protocol." {$code} {$text}", true, $code);
 		}
 		else
 		{
-			header("HTTP/1.1 {$code} {$text}", TRUE, $code);
+			header("HTTP/1.1 {$code} {$text}", true, $code);
 		}
 	}
 }
@@ -509,7 +519,7 @@ if ( ! function_exists('_exception_handler'))
  */
 if ( ! function_exists('remove_invisible_characters'))
 {
-	function remove_invisible_characters($str, $url_encoded = TRUE)
+	function remove_invisible_characters($str, $url_encoded = true)
 	{
 		$non_displayables = array();
 		

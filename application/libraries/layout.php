@@ -23,6 +23,11 @@ class Layout {
 	{
 		$this->CI =& get_instance();
 	}
+	
+	public function getCI()
+	{
+		return $this->CI;
+	}
 
 	public function render($part, $data = array())
 	{

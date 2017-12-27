@@ -48,7 +48,11 @@ class CI_DB_mssql_utility extends CI_DB_utility {
 	 */
 	function _optimize_table($table)
 	{
-		return FALSE; // Is this supported in MS SQL?
+		//Let's use the unused param.
+		if(isset($table)===false)
+			return false;
+
+		return false; // Is this supported in MS SQL?
 	}
 
 	// --------------------------------------------------------------------
@@ -64,7 +68,11 @@ class CI_DB_mssql_utility extends CI_DB_utility {
 	 */
 	function _repair_table($table)
 	{
-		return FALSE; // Is this supported in MS SQL?
+		//Let's use the unused param.
+		if(isset($table)===false)
+			return false;
+
+		return false; // Is this supported in MS SQL?
 	}
 
 	// --------------------------------------------------------------------
@@ -78,6 +86,10 @@ class CI_DB_mssql_utility extends CI_DB_utility {
 	 */
 	function _backup($params = array())
 	{
+		//Let's use the unused param.
+		if(isset($table)===false)
+			return $this->db->display_error('db_unsuported_feature');
+	}
 		// Currently unsupported
 		return $this->db->display_error('db_unsuported_feature');
 	}

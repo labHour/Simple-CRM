@@ -6,7 +6,7 @@ class Crud_model extends CI_Model {
 
 	public function insert($data)
 	{
-    	$this->db->insert($this->table, $data);
+    	$this->db->insert($data);
         return $this->db->insert_id();
 	}
 	
@@ -25,7 +25,7 @@ class Crud_model extends CI_Model {
 
 	public function delete($id)
 	{
-        if ($id != NULL)
+        if ($id != null)
         {
             $this->db->where('id', $id);                    
             $this->db->delete($this->table);                        

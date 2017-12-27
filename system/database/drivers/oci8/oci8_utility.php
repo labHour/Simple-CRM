@@ -32,7 +32,7 @@ class CI_DB_oci8_utility extends CI_DB_utility {
 	 */
 	function _list_databases()
 	{
-		return FALSE;
+		return false;
 	}
 
 	// --------------------------------------------------------------------
@@ -48,7 +48,11 @@ class CI_DB_oci8_utility extends CI_DB_utility {
 	 */
 	function _optimize_table($table)
 	{
-		return FALSE; // Is this supported in Oracle?
+		//Let's use the unused param.
+		if(isset($table)===false)
+			return false;
+
+		return false; // Is this supported in Oracle?
 	}
 
 	// --------------------------------------------------------------------
@@ -64,7 +68,11 @@ class CI_DB_oci8_utility extends CI_DB_utility {
 	 */
 	function _repair_table($table)
 	{
-		return FALSE; // Is this supported in Oracle?
+		//Let's use the unused param.
+		if(isset($table)===false)
+			return false;
+
+		return false; // Is this supported in Oracle?
 	}
 
 	// --------------------------------------------------------------------
@@ -78,6 +86,10 @@ class CI_DB_oci8_utility extends CI_DB_utility {
 	 */
 	function _backup($params = array())
 	{
+		//Let's use the unused param.
+		if(isset($params)===false)
+			return $this->db->display_error('db_unsuported_feature');
+		
 		// Currently unsupported
 		return $this->db->display_error('db_unsuported_feature');
 	}

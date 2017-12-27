@@ -17,7 +17,7 @@ class Clients extends CI_Controller {
 		$this->load->model('crud_model');
 		$this->load->model('clients_model');
 		$this->data['title'] = 'Полиграфия / Клиенты';
-		//$this->output->enable_profiler('TRUE');
+		//$this->output->enable_profiler('true');
 	}
 
 
@@ -75,7 +75,7 @@ class Clients extends CI_Controller {
 
 		$this->form_validation->set_rules('name', 'Название', 'trim|required');
 
-		if ($this->form_validation->run() == TRUE)
+		if ($this->form_validation->run() == true)
 		{
 			$client = array(
 				'name' 			=> $this->input->post('name'),
@@ -110,7 +110,7 @@ class Clients extends CI_Controller {
 	{
 		$this->form_validation->set_rules('name', 'Название', 'trim|required');
 
-		if ($this->form_validation->run() == TRUE)
+		if ($this->form_validation->run() == true)
 		{
 			$client = array(
 				'name' 			=> $this->input->post('name'),
@@ -120,7 +120,7 @@ class Clients extends CI_Controller {
 	            'address' 		=> $this->input->post('address'),
 	            'description' 	=> $this->input->post('description'),
 			);
-			$this->clients_model->add( $client );
+			$this->clients_model->addClient($client);
 			redirect('clients');
 		}
 		$this->data['form_action'] = 'clients/add/';			

@@ -80,7 +80,7 @@ class CI_DB_mssql_forge extends CI_DB_forge {
 	{
 		$sql = 'CREATE TABLE ';
 
-		if ($if_not_exists === TRUE)
+		if ($if_not_exists === true)
 		{
 			$sql .= 'IF NOT EXISTS ';
 		}
@@ -110,7 +110,7 @@ class CI_DB_mssql_forge extends CI_DB_forge {
 					$sql .= '('.$attributes['CONSTRAINT'].')';
 				}
 
-				if (array_key_exists('UNSIGNED', $attributes) && $attributes['UNSIGNED'] === TRUE)
+				if (array_key_exists('UNSIGNED', $attributes) && $attributes['UNSIGNED'] === true)
 				{
 					$sql .= ' UNSIGNED';
 				}
@@ -120,7 +120,7 @@ class CI_DB_mssql_forge extends CI_DB_forge {
 					$sql .= ' DEFAULT \''.$attributes['DEFAULT'].'\'';
 				}
 
-				if (array_key_exists('NULL', $attributes) && $attributes['NULL'] === TRUE)
+				if (array_key_exists('NULL', $attributes) && $attributes['NULL'] === true)
 				{
 					$sql .= ' NULL';
 				}
@@ -129,7 +129,7 @@ class CI_DB_mssql_forge extends CI_DB_forge {
 					$sql .= ' NOT NULL';
 				}
 
-				if (array_key_exists('AUTO_INCREMENT', $attributes) && $attributes['AUTO_INCREMENT'] === TRUE)
+				if (array_key_exists('AUTO_INCREMENT', $attributes) && $attributes['AUTO_INCREMENT'] === true)
 				{
 					$sql .= ' AUTO_INCREMENT';
 				}
@@ -205,7 +205,7 @@ class CI_DB_mssql_forge extends CI_DB_forge {
 			$sql .= " DEFAULT \"$default_value\"";
 		}
 
-		if ($null === NULL)
+		if ($null === null)
 		{
 			$sql .= ' NULL';
 		}
